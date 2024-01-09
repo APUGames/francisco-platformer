@@ -1,1 +1,3 @@
-# francisco-platformer
+# Platformer Game
+
+By Brian Francisco
