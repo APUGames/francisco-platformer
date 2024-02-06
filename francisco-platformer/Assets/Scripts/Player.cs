@@ -14,13 +14,17 @@ public class Player : MonoBehaviour
 
     Animator playerAnimator;
 
-    Collider2D playerCollider;  
+    CapsuleCollider2D playerBodyCollider;
+
+    BoxCollider2D playerFeetCollider;
+
     // Start is called before the first frame update
     void Start()
     {
         playerCharacter = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
-        playerCollider = GetComponent<Collider2D>();
+        playerBodyCollider = GetComponent<CapsuleCollider2D>();
+        playerFeetCollider = GetComponent<BoxCollider2D>();
 
         gravityScaleAtStart = playerCharacter.gravityScale;
     }
@@ -64,7 +68,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (!playerCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+       if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             //Will stop this function unless true
             return;
@@ -80,7 +84,7 @@ public class Player : MonoBehaviour
 
     private void Climb()
     {
-        if (!playerCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        if (!playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
         {
             playerAnimator.SetBool("climb", false);
 
