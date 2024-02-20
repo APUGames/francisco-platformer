@@ -7,6 +7,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 5.0f;
     [SerializeField] private float jumpSpeed = 5.0f;
     [SerializeField] private float climbSpeed = 5.0f;
+    [SerializeField] private Vector2 deathSeq = new Vector2(25f, 25f);
+
+
+    [SerializeField] private int jumps = 0;
+
+    bool isAlive = true;
 
     private float gravityScaleAtStart;
 
@@ -32,10 +38,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isAlive)
+        {
+            return;
+        }
+
         Run();
         FlipSprite();
         Jump();
         Climb();
+        die();
+
     }
 
     private void Run()
@@ -68,17 +81,22 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-       if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            //Will stop this function unless true
-            return;
-        }
+        //while (jumps >= 2)
+       // {
+            if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+            {
+                //Will stop this function unless true
+                return;
+            }
+       // }
+        
 
         if (Input.GetButtonDown("Jump"))
         {
             //Get new Y velocity based on a controllable variable
             Vector2 jumpVelocity = new Vector2(0.0f, jumpSpeed);
             playerCharacter.velocity += jumpVelocity;
+            //jumps++;
         }
     }
 
@@ -105,6 +123,17 @@ public class Player : MonoBehaviour
 
         bool vSpeed = Mathf.Abs(playerCharacter.velocity.y) > Mathf.Epsilon;
         playerAnimator.SetBool("climb", vSpeed);
+    }
+
+    private void die()
+    {
+        if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Hazards")))
+        {
+            playerAnimator.SetTrigger("die");
+            playerCharacter.velocity = deathSeq;
+
+            isAlive = false;
+        }
     }
 }
 

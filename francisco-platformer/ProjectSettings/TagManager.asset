@@ -15,8 +15,8 @@ TagManager:
   - Ground
   - Player
   - Climbing
-  - 
-  - 
+  - Enemy
+  - Hazards
   - 
   - 
   - 
@@ -52,6 +52,12 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2739147667
+    locked: 0
+  - name: Enemy
+    uniqueID: 2116915045
+    locked: 0
+  - name: Hazards
+    uniqueID: 1716929879
     locked: 0
   - name: ExtremeForeground
     uniqueID: 2977298141
