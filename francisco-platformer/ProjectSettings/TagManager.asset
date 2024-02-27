@@ -17,7 +17,7 @@ TagManager:
   - Climbing
   - Enemy
   - Hazards
-  - 
+  - Pickups
   - 
   - 
   - 
@@ -61,4 +61,7 @@ TagManager:
     locked: 0
   - name: ExtremeForeground
     uniqueID: 2977298141
+    locked: 0
+  - name: Pickups
+    uniqueID: 1835171135
     locked: 0

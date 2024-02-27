@@ -8,9 +8,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpSpeed = 5.0f;
     [SerializeField] private float climbSpeed = 5.0f;
     [SerializeField] private Vector2 deathSeq = new Vector2(25f, 25f);
+    [SerializeField] private Vector2 hurtSeq = new Vector2(15f, 15f);
 
+    public int health = 100;
 
-    [SerializeField] private int jumps = 0;
+    private int jumps = 0;
 
     bool isAlive = true;
 
@@ -38,6 +40,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print("Number of jumps: " + jumps);
+        //print(health);
+
         if (!isAlive)
         {
             return;
@@ -47,7 +52,8 @@ public class Player : MonoBehaviour
         FlipSprite();
         Jump();
         Climb();
-        die();
+        //die();
+        Hurt();
 
     }
 
@@ -60,7 +66,7 @@ public class Player : MonoBehaviour
 
         // playerAnimator.SetBool("run", true);
 
-        print(runVelocity);
+        // print(runVelocity);
 
         bool hSpeed = Mathf.Abs(playerCharacter.velocity.x) > Mathf.Epsilon;
 
@@ -81,22 +87,31 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        //while (jumps >= 2)
-       // {
-            if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Climbing")))
+        {
+            jumps = 1;
+        }
+        if (jumps >=2)
+        {
+            
+            if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Climbing")))
             {
                 //Will stop this function unless true
                 return;
             }
-       // }
-        
+        }
+
+        if (jumps >= 2)
+        {
+            jumps = 0;
+        }
 
         if (Input.GetButtonDown("Jump"))
         {
             //Get new Y velocity based on a controllable variable
             Vector2 jumpVelocity = new Vector2(0.0f, jumpSpeed);
             playerCharacter.velocity += jumpVelocity;
-            //jumps++;
+            jumps++;
         }
     }
 
@@ -125,15 +140,29 @@ public class Player : MonoBehaviour
         playerAnimator.SetBool("climb", vSpeed);
     }
 
-    private void die()
+    private void Hurt()
     {
         if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Hazards")))
+        {
+            playerCharacter.velocity = hurtSeq;
+            health--;
+        }
+
+        if (health <=0)
         {
             playerAnimator.SetTrigger("die");
             playerCharacter.velocity = deathSeq;
 
             isAlive = false;
         }
+        if (!isAlive)
+        {
+            FindAnyObjectByType<GameSession>().ProcessPlayerDeath();
+        }
+        
     }
+    //private void die()
+    //{
+    //}
 }
 
